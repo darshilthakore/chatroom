@@ -4,9 +4,15 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.querySelector('#newbtn').disabled = true;
 	document.querySelector('[name="displayname"]').onkeyup = () => {
 
-		
+
 		
 		const displayname = document.querySelector('[name="displayname"]').value;
+		if (displayname.length > 0){
+			document.querySelector('#newbtn').disabled = false;
+		} else {
+			document.querySelector('#newbtn').disabled = true;
+		}
+
 		const request = new XMLHttpRequest();
 		request.open('POST', '/checkdispname');
 		request.onload = () => {
