@@ -33,11 +33,10 @@ def checkdispname():
 	# return jsonify(prompt)
 	try:
 		if users[displayname]:
-			prompt = "displayname not available"
-			return jsonify(prompt)
+			return jsonify({"available": False})
+
 	except KeyError:
-		prompt = "username available"
-		return jsonify(prompt)
+		return jsonify({"available": True})
 
 
 @app.route("/channels")

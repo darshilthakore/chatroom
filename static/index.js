@@ -17,7 +17,16 @@ document.addEventListener('DOMContentLoaded', () => {
 		request.open('POST', '/checkdispname');
 		request.onload = () => {
 			const response = JSON.parse(request.responseText);
-			document.querySelector('.validation').innerHTML= response;
+
+			if (response.available) {
+				document.querySelector('.validation').innerHTML = "username available";
+			} else {
+				document.querySelector('.validation').innerHTML = "username not available";
+				document.querySelector('#newbtn').disabled = true;
+			}
+
+
+			// document.querySelector('.validation').innerHTML= response;
 			// document.querySelector('[name="newbtn"]').disabled = response.status;
 
 
