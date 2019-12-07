@@ -11,7 +11,7 @@ socketio = SocketIO(app)
 
 
 
-users = ["darshil"]
+users = {'darshil':123}
 
 
 @app.route("/")
@@ -20,16 +20,24 @@ def index():
 
 
 # route to check displayname availability
-@app.route("/checkdispname", methods=["POST"])
+@app.route("/checkdispname", methods=["POST","GET"])
 def checkdispname():
-
-	# getting the displayname from the form
 	displayname = request.form.get("displayname")
-	if displayname in users:
-		prompt = "displayname not available"
+	if displayname == "":
+		return jsonify('')
+	# getting the displayname from the form
+	# if displayname in users:
+	# 	prompt = "displayname not available"
+	# 	return jsonify(prompt)
+	# prompt = "username available"
+	# return jsonify(prompt)
+	try:
+		if users[displayname]:
+			prompt = "displayname not available"
+			return jsonify(prompt)
+	except KeyError:
+		prompt = "username available"
 		return jsonify(prompt)
-	prompt = "username available"
-	return jsonify(prompt)
 
 
 @app.route("/channels")
