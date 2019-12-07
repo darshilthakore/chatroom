@@ -26,7 +26,7 @@
 				</div>
 				<div class="col-sm-6">
 					<h3>Or Else use your new display name</h3>
-					<form>
+					<form action="{{ url_for('newuser') }}" method="post">
 						<div class="form-group">
 							<input class="form-control" name="displayname" placeholder="Enter a username which will be visible to others" required><span class="validation"></span>
 							<input class="form-control" type="password" name="password-login" placeholder="Enter a new password" required>

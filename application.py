@@ -2,7 +2,8 @@ import os
 import json
 import requests
 
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session, url_for, redirect
+from flask_session import Session
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
@@ -38,6 +39,15 @@ def checkdispname():
 	except KeyError:
 		return jsonify({"available": True, "msg": "username available"})
 
+
+@app.route("/channels&username", methods=["POST","GET"])
+def newuser():
+	displayname = request.form.get("displayname")
+	password = request.form.get("password-login")
+	users[displayname] = password
+	session['displayname'] = displayname
+
+	return render_template("channels.html",displayname=displayname)
 
 @app.route("/channels")
 def channels():
