@@ -24,7 +24,7 @@ def index():
 def checkdispname():
 	displayname = request.form.get("displayname")
 	if displayname == "":
-		return jsonify('')
+		return jsonify({"available": False, "msg": "username cannot be empty"})
 	# getting the displayname from the form
 	# if displayname in users:
 	# 	prompt = "displayname not available"
@@ -33,10 +33,10 @@ def checkdispname():
 	# return jsonify(prompt)
 	try:
 		if users[displayname]:
-			return jsonify({"available": False})
+			return jsonify({"available": False, "msg": "this username is not available"})
 
 	except KeyError:
-		return jsonify({"available": True})
+		return jsonify({"available": True, "msg": "username available"})
 
 
 @app.route("/channels")
