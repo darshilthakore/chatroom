@@ -3,7 +3,50 @@
 <head>
 	<title>Welcome to Flack :: {{ displayname }}</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css')}}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+    <script id="message" type="text/x-handlebars-template">
+    	<div class="message">
+    		<h6>{{ displayname }}</h6><i>{% raw -%} {{ time }} {%- endraw %}</i>
+    		<p id="act-msg">
+    		{% raw -%}
+    			{{ message }}
+    		{%- endraw %}
+    		</p>
+    	</div>
+    	
+    </script>
+
+    <script>
+    	document.addEventListener('DOMContentLoaded', () => {
+
+    		document.querySelector('#sendmessage').onclick = () => {
+
+    			var d = document.querySelector('[name="message"]').value;
+    			var t = timeStamp();
+    			message(message = d, time = t);
+    		}
+    	});
+
+		function timeStamp() {
+    		var d = new Date();
+    		var n = d.toLocaleTimeString();
+    		return n;
+		}
+
+		const msg_template = Handlebars.compile(document.querySelector('#message').innerHTML);
+    	function message(message,time) {
+    		const msg = msg_template({'message': message, 'time': time});
+    		document.querySelector('.chatarea').innerHTML += msg;
+    	}
+
+    	
+    	
+
+
+    </script>
+
+
 </head>
 <body>
 	<div class="sidenav">
@@ -11,7 +54,18 @@
 	</div>
 
 	<div class="main">
-		
+		<div class="heading">
+			<h2 id="heading"></h2>
+		</div>
+		<div class="chatarea">
+			
+			
+		</div>
+		<div>
+			
+			<input type="text" name="message"><button id="sendmessage">Send</button>
+			
+		</div>
 	</div>
 
 </body>
