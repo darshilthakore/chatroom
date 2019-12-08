@@ -65,4 +65,9 @@ def newchannel():
 	channel = request.form.get("channel")
 	channel = '#' + str(channel)
 	channels.append(channel)
-	return jsonify(channels)
+	return channels[-1]
+
+@app.route("/updatechannel", methods=["POST","GET"])
+def updatechannel():
+	m = channels[-1]
+	return jsonify(m)

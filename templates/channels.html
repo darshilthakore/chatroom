@@ -27,13 +27,7 @@
     <script>
     	
 
-    	// 	document.querySelector('#sendmessage').onclick = () => {
-
-    	// 		var d = document.querySelector('[name="message"]').value;
-    	// 		var t = timeStamp();
-    	// 		message(message = d, time = t);
-    	// 	}
-    	// });
+    	
     	start = 0;
     	end = 100;
     	document.addEventListener('DOMContentLoaded', () => {
@@ -47,12 +41,6 @@
 
 	    		window.scrollBy(0, document.body.offsetHeight);
 
-	    		// const request = new XMLHttpRequest();
-	    		// request.open('GET', '/channels&username');
-	    		// request.onload = () => {
-	    		// 	const response = JSON.parse(request.responseText);
-	    		// 	response.forEach(channel);
-	    		// }
 
 
 	    	}
@@ -61,57 +49,63 @@
 	    		const request = new XMLHttpRequest();
 	    		request.open('GET', '/newchannel');
 	    		request.onload = () => {
-	    			const response = JSON.parse(request.responseText);
-	    			response.forEach(channel);
-
+	    			const response = request.responseText;
+	    			response.forEach(updatechannel);
 	    		}
 	    		const data = new FormData();
 	    		data.append('channel', channel);
 	    		request.send(data);
 
-	    		loadchannels();
+	    		
     		}
 
+	    
+
+
+    		function updatechannel(contents) {
+    			const a = document.createElement('a');
+    			a.setAttribute('href', " ");
+    			a.innerHTML = contents;
+    			document.querySelector('.channel-list').append(a);	
+    		}
+
+    		
+	    	function loadchannels() {
+	    		const request = new XMLHttpRequest();
+	    		request.open('GET', '/channellists');
+	    		request.onload = () => {
+	    			const response = JSON.parse(request.responseText);
+	    			response.forEach(channel);
+	    		}
+
+	    		const data = new FormData();
+	    		request.send(data);
+	    	}
+
+
+
+
+			function timeStamp() {
+	    		var d = new Date();
+	    		var n = d.toLocaleTimeString();
+	    		return n;
+			}
+
+			const msg_template = Handlebars.compile(document.querySelector('#message').innerHTML);
+	    	function message(message,time) {
+	    		const msg = msg_template({'message': message, 'time': time});
+	    		document.querySelector('#chatarea').innerHTML += msg;
+	    	}
+
+	    	const channel_template = Handlebars.compile(document.querySelector('#channel-list').innerHTML);
+	    	function channel(channel) {
+	    		const ch = channel_template({'channel': channel});
+	    		document.querySelector('.channel-list').innerHTML += ch;
+	    	}
+
+
+	    	
 	    });
-
-
-    	// }
-
-
-    	function loadchannels() {
-    		const request = new XMLHttpRequest();
-    		request.open('GET', '/channellists');
-    		request.onload = () => {
-    			const response = JSON.parse(request.responseText);
-    			response.forEach(channel);
-    		}
-
-    		const data = new FormData();
-    		request.send(data);
-    	}
-
-
-
-
-		function timeStamp() {
-    		var d = new Date();
-    		var n = d.toLocaleTimeString();
-    		return n;
-		}
-
-		const msg_template = Handlebars.compile(document.querySelector('#message').innerHTML);
-    	function message(message,time) {
-    		const msg = msg_template({'message': message, 'time': time});
-    		document.querySelector('#chatarea').innerHTML += msg;
-    	}
-
-    	const channel_template = Handlebars.compile(document.querySelector('#channel-list').innerHTML);
-    	function channel(channel) {
-    		const ch = channel_template({'channel': channel});
-    		document.querySelector('.channel-list').innerHTML += ch;
-    	}
-    	
-
 
 
 
@@ -126,7 +120,7 @@
 			
 		</div>
 		<input type="text" name="newchannel"><br>
-		<button id="channel-btn">Create Channel</button>
+		<button id="channel-btn">Create your own Channel</button>
 	</div>
 
 
