@@ -36,3 +36,32 @@ body {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
 }
+
+
+
+.heading {
+  width: 100%;
+  margin-top: 1px;
+  margin-left: 160px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: skyblue;
+  border-color: skyblue;
+}
+
+
+.message-box {
+  border-style: solid;
+  border-width: 1px;
+  margin-left: 160px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  
+}
+
+#chatarea {
+  margin-top: 55px;
+}
+
