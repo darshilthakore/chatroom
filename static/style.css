@@ -28,7 +28,7 @@ body {
 
 .main {
   margin-left: 160px; /* Same as the width of the sidenav */
-  font-size: 28px; /* Increased text to enable scrolling */
+  font-size: 20px; /* Increased text to enable scrolling */
   padding: 0px 10px;
 }
 
@@ -41,7 +41,8 @@ body {
 
 .heading {
   width: 100%;
-  margin-top: 1px;
+  margin-top: 5px;
+  font-size: 30px;
   margin-left: 160px;
   position: fixed;
   top: 0;
@@ -63,5 +64,22 @@ body {
 
 #chatarea {
   margin-top: 55px;
+  margin-bottom: 60px;
+
 }
 
+.message {
+  border: 2px solid #dedede;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.message i {
+  font-size: 10px;
+}
+
+.timestamp {
+  float: right;
+}

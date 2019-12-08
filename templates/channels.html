@@ -7,12 +7,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
     <script id="message" type="text/x-handlebars-template">
     	<div class="message">
-    		<h6>{{ displayname }}</h6><i>{% raw -%} {{ time }} {%- endraw %}</i>
-    		<p id="act-msg">
-    		{% raw -%}
+    		<span>{{ displayname }}</span>
+    		<span> :
+    		 {% raw -%}
     			{{ message }}
-    		{%- endraw %}
-    		</p>
+    		 {%- endraw %}
+    		</span>
+    		<span id="timestamp">
+    			<i>{% raw -%} {{ time }} {%- endraw %} </i>
+    		</span>
     	</div>
     	
     </script>
