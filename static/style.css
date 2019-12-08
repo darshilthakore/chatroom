@@ -83,3 +83,7 @@ body {
 .timestamp {
   float: right;
 }
+
+#displayname {
+  color: blue;
+}

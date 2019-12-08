@@ -7,7 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
     <script id="message" type="text/x-handlebars-template">
     	<div class="message">
-    		<span>{{ displayname }}</span>
+    		<span id="displayname">{{ displayname }}</span>
     		<span> :
     		 {% raw -%}
     			{{ message }}
@@ -35,6 +35,10 @@
 	    		const d = document.querySelector('[name="message"]').value;
 	    		const t = timeStamp();
 	    		message(d,t);
+
+	    		window.scrollBy(0, document.body.offsetHeight);
+
+
 	    	}
 	    });
 
