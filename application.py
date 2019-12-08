@@ -13,6 +13,7 @@ socketio = SocketIO(app)
 
 
 users = {'darshil':123}
+channels = ['#movies', '#sports', '#tvseries', '#hollywood', '#bollywood']
 
 
 @app.route("/")
@@ -40,7 +41,7 @@ def checkdispname():
 		return jsonify({"available": True, "msg": "username available"})
 
 
-@app.route("/channels&username", methods=["POST","GET"])
+@app.route("/newuser", methods=["POST","GET"])
 def newuser():
 	displayname = request.form.get("displayname")
 	password = request.form.get("password-login")
@@ -49,6 +50,12 @@ def newuser():
 
 	return render_template("channels.html",displayname=displayname)
 
-@app.route("/channels")
-def channels():
-	return render_template("channels.html")
+# @app.route("/channels")
+# def channels():
+# 	return render_template("channels.html")
+
+
+@app.route("/channellists", methods=["POST","GET"])
+def channellists():
+
+	return jsonify(channels)
