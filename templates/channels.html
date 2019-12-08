@@ -18,15 +18,23 @@
     </script>
 
     <script>
+    	
+
+    	// 	document.querySelector('#sendmessage').onclick = () => {
+
+    	// 		var d = document.querySelector('[name="message"]').value;
+    	// 		var t = timeStamp();
+    	// 		message(message = d, time = t);
+    	// 	}
+    	// });
     	document.addEventListener('DOMContentLoaded', () => {
+	    	document.querySelector('#sendmessage').onclick = () => {
+	    		const d = document.querySelector('[name="message"]').value;
+	    		const t = timeStamp();
+	    		message(d,t);
+	    	}
+	    });
 
-    		document.querySelector('#sendmessage').onclick = () => {
-
-    			var d = document.querySelector('[name="message"]').value;
-    			var t = timeStamp();
-    			message(message = d, time = t);
-    		}
-    	});
 
 		function timeStamp() {
     		var d = new Date();
@@ -37,7 +45,7 @@
 		const msg_template = Handlebars.compile(document.querySelector('#message').innerHTML);
     	function message(message,time) {
     		const msg = msg_template({'message': message, 'time': time});
-    		document.querySelector('.chatarea').innerHTML += msg;
+    		document.querySelector('#chatarea').innerHTML += msg;
     	}
 
     	
@@ -57,7 +65,7 @@
 		<div class="heading">
 			<h2 id="heading"></h2>
 		</div>
-		<div class="chatarea">
+		<div id="chatarea">
 			
 			
 		</div>
