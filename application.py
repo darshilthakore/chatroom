@@ -59,3 +59,10 @@ def newuser():
 def channellists():
 
 	return jsonify(channels)
+
+@app.route("/newchannel", methods=["POST","GET"])
+def newchannel():
+	channel = request.form.get("channel")
+	channel = '#' + str(channel)
+	channels.append(channel)
+	return jsonify(channels)

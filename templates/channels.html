@@ -56,7 +56,26 @@
 
 
 	    	}
+    		document.querySelector('#channel-btn').onclick = () => {
+	    		const channel = document.querySelector('[name="newchannel"]').value;
+	    		const request = new XMLHttpRequest();
+	    		request.open('GET', '/newchannel');
+	    		request.onload = () => {
+	    			const response = JSON.parse(request.responseText);
+	    			response.forEach(channel);
+
+	    		}
+	    		const data = new FormData();
+	    		data.append('channel', channel);
+	    		request.send(data);
+
+	    		loadchannels();
+    		}
+
 	    });
+
+
+    	// }
 
 
     	function loadchannels() {
@@ -72,7 +91,7 @@
     	}
 
 
-    	
+
 
 		function timeStamp() {
     		var d = new Date();
@@ -89,7 +108,7 @@
     	const channel_template = Handlebars.compile(document.querySelector('#channel-list').innerHTML);
     	function channel(channel) {
     		const ch = channel_template({'channel': channel});
-    		document.querySelector('.sidenav').innerHTML += ch;
+    		document.querySelector('.channel-list').innerHTML += ch;
     	}
     	
 
@@ -103,8 +122,13 @@
 <body>
 	<header class="heading">Hello</header>
 	<div class="sidenav">
-		
+		<div class="channel-list">
+			
+		</div>
+		<input type="text" name="newchannel"><br>
+		<button id="channel-btn">Create Channel</button>
 	</div>
+
 
 	<div class="main">
 		
