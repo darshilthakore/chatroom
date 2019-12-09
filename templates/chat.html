@@ -6,7 +6,21 @@
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
 	<script id="channel-list" type="text/x-handlebars-template">
-    	<a href="">{% raw -%} {{channel}} {%- endraw %}</a>
+    	<button id="buttons" data-channel="{% raw -%} {{channel}} {%- endraw %}" class="list">{% raw -%} {{channel}} {%- endraw %}</button>
+    </script>
+	<script id="message" type="text/x-handlebars-template">
+    	<div class="message">
+    		<span id="displayname">{% raw -%}{{ displayname }} {%- endraw %}</span>
+    		<span> :
+    		 {% raw -%}
+    			{{ message }}
+    		 {%- endraw %}
+    		</span>
+    		<span id="timestamp">
+    			<i>{% raw -%} {{ time }} {%- endraw %} </i>
+    		</span>
+    	</div>
+    	
     </script>
     <script>
     	document.addEventListener('DOMContentLoaded', () => {
@@ -19,14 +33,37 @@
 		   				socket.emit('addchannel', {'newchannel': newchannel});
 		   			}
 	   			}
+
 	   			
 
+	   		});	
+
+	   		socket.on('connect', () => {
+	   			document.addEventListener('click', event => {
+	   				const element = event.target;
+	   				if (element.className === 'list'){
+	   					channel = element.getAttribute('data-channel');
+	   					socket.emit('loadmessage', {'channel': channel});
+	   				}
+	   			});
 	   		});
+
+	   		
 
 	   		socket.on('response', data => {
 	   			for(i = 0; i < data.length; i++) {
 	   				channel(data[i]);
 	   			}
+	   		});
+
+	   		socket.on('message loader', data => {
+	   			for (i in data) {
+	   				const user = i;
+	   				const msg = data[i];
+	   				const t = timeStamp();
+	   				message(user,msg,t);
+	   			}
+
 	   		});
 
 
@@ -37,6 +74,20 @@
     		const ch = channel_template({'channel': channel});
     		document.querySelector('.channel-list').innerHTML += ch;
     	}
+
+    	function timeStamp() {
+    		var d = new Date();
+    		var n = d.toLocaleTimeString();
+    		return n;
+		}
+
+		const msg_template = Handlebars.compile(document.querySelector('#message').innerHTML);
+    	function message(displayname,message,time) {
+    		const msg = msg_template({'displayname': displayname, 'message': message, 'time': time});
+    		document.querySelector('#chatarea').innerHTML += msg;
+    	}
+
+
     </script>
 </head>
 

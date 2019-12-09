@@ -8,7 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
     <script id="message" type="text/x-handlebars-template">
     	<div class="message">
-    		<span id="displayname">{{ displayname }}</span>
+    		<span id="displayname">{% raw -%}{{ displayname }} {%- endraw %}</span>
     		<span> :
     		 {% raw -%}
     			{{ message }}
@@ -35,10 +35,10 @@
     		loadchannels();
 	    	document.querySelector('#sendmessage').onclick = () => {
 	    		
-
+	    		const n = {{displayname}}
 	    		const d = document.querySelector('[name="message"]').value;
 	    		const t = timeStamp();
-	    		message(d,t);
+	    		message(n,d,t);
 
 	    		window.scrollBy(0, document.body.offsetHeight);
 
@@ -93,8 +93,8 @@
 			}
 
 			const msg_template = Handlebars.compile(document.querySelector('#message').innerHTML);
-	    	function message(message,time) {
-	    		const msg = msg_template({'message': message, 'time': time});
+	    	function message(displayname,message,time) {
+	    		const msg = msg_template({'displayname': displayname, 'message': message, 'time': time});
 	    		document.querySelector('#chatarea').innerHTML += msg;
 	    	}
 

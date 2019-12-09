@@ -105,5 +105,15 @@ def addchannel(data):
 	emit('response', m, broadcast=True)
 
 
+@socketio.on('loadmessage')
+def loadmessage(data):
+	print(f"loading the existing messages of {data}")
+	channel = data["channel"]
+	m = channels[channel]
+	print(f"m is {m}")
+	emit('message loader', m, broadcast=False)
+
+
+
 if __name__ == '__main__':
 	socketio.run(app)
