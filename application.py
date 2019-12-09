@@ -14,9 +14,9 @@ socketio = SocketIO(app)
 
 users = {'darshil':123}
 # channels = ['#movies', '#sports', '#tvseries', '#hollywood', '#bollywood']
-channel_sports = {"darshil": "hey"}
-channel_movies = {"rohan": "hola"}
-channels = {"sports": channel_sports, "movies": channel_movies }
+# channel_sports = 
+# channel_movies = 
+channels = {"sports": {"darshil": "hey"}, "movies": {"rohan": "hola"} }
 
 
 
@@ -99,7 +99,7 @@ def addchannel(data):
 	newchannel = data["newchannel"]
 	m = []
 	m.append(newchannel)
-	channels[newchannel] = "channel_" + str(newchannel)
+	channels[newchannel] = {}
 	print(channels)
 	print(m)
 	emit('response', m, broadcast=True)
