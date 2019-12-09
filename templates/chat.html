@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Welcome to Flack : {{displayname}}</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}">
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+	<script id="channel-list" type="text/x-handlebars-template">
+    	<a href="">{% raw -%} {{channel}} {%- endraw %}</a>
+    </script>
+    <script>
+    	document.addEventListener('DOMContentLoaded', () => {
+	   		var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
+	   		socket.on('connect', () => {
+
+
+	   		});
+
+	   		socket.on('response', data => {
+	   			for(i = 0; i < data.length; i++) {
+	   				channel(data[i]);
+	   			}
+	   		});
+
+    	});
+    	const channel_template = Handlebars.compile(document.querySelector('#channel-list').innerHTML);
+    	function channel(channel) {
+    		const ch = channel_template({'channel': channel});
+    		document.querySelector('.channel-list').innerHTML += ch;
+    	}
+    </script>
+</head>
+
+<body>
+	<header class="heading">Hello</header>
+	<div class="sidenav">
+		<div class="channel-list">	
+		</div>
+		<input type="text" name="newchannel"><br>
+		<button id="channel-btn">Create your own Channel</button>
+	</div>
+
+	<div class="main">
+		
+		<div id="chatarea">
+		</div>
+
+	</div>
+	
+	<div class="message-box">
+	
+		<input type="text" name="message"><button id="sendmessage">Send</button>
+		
+	</div>
+
+</body>
+</html>

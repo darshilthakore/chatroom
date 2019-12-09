@@ -13,7 +13,12 @@ socketio = SocketIO(app)
 
 
 users = {'darshil':123}
-channels = ['#movies', '#sports', '#tvseries', '#hollywood', '#bollywood']
+# channels = ['#movies', '#sports', '#tvseries', '#hollywood', '#bollywood']
+channel_sports = {"darshil": "hey"}
+channel_movies = {"rohan": "hola"}
+channels = {"sports": channel_sports, "movies": channel_movies }
+
+
 
 
 @app.route("/")
@@ -48,26 +53,45 @@ def newuser():
 	users[displayname] = password
 	session['displayname'] = displayname
 
-	return render_template("channels.html",displayname=displayname)
+	return render_template("chat.html",displayname=displayname)
 
 # @app.route("/channels")
 # def channels():
 # 	return render_template("channels.html")
 
 
-@app.route("/channellists", methods=["POST","GET"])
-def channellists():
+# @app.route("/channellists", methods=["POST","GET"])
+# def channellists():
 
-	return jsonify(channels)
+# 	return jsonify(channels)
 
-@app.route("/newchannel", methods=["POST","GET"])
-def newchannel():
-	channel = request.form.get("channel")
-	channel = '#' + str(channel)
-	channels.append(channel)
-	return channels[-1]
+# @app.route("/newchannel", methods=["POST","GET"])
+# def newchannel():
+# 	channel = request.form.get("channel")
+# 	channel = '#' + str(channel)
+# 	channels.append(channel)
+# 	return channels[-1]
 
-@app.route("/updatechannel", methods=["POST","GET"])
-def updatechannel():
-	m = channels[-1]
-	return jsonify(m)
+# @app.route("/updatechannel", methods=["POST","GET"])
+# def updatechannel():
+# 	m = channels[-1]
+# 	return jsonify(m)
+
+
+@socketio.on("load channels")
+def loadchannels():
+	data = []
+	for channel in channels:
+		data.append(channel)
+
+@socketio.on('connect')
+def connect():
+	print("socket connected")
+	data = []
+	for channel in channels:
+		data.append(channel)
+	print(data)
+	emit('response', data, broadcast=True)
+
+if __name__ == '__main__':
+	socketio.run(app)

@@ -1,2 +1,7 @@
 export FLASK_APP=application.py
+import os
+os.urandom(24)
+
+export SECRET_KEY=
+
 export FLASK_DEBUG=1
