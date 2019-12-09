@@ -91,7 +91,19 @@ def connect():
 	for channel in channels:
 		data.append(channel)
 	print(data)
-	emit('response', data, broadcast=True)
+	emit('response', data, broadcast=False)
+
+@socketio.on('addchannel')
+def addchannel(data):
+	print(f"adding a new channel {data}")
+	newchannel = data["newchannel"]
+	m = []
+	m.append(newchannel)
+	channels[newchannel] = "channel_" + str(newchannel)
+	print(channels)
+	print(m)
+	emit('response', m, broadcast=True)
+
 
 if __name__ == '__main__':
 	socketio.run(app)

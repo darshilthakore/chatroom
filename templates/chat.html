@@ -13,7 +13,13 @@
 	   		var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
 	   		socket.on('connect', () => {
-
+	   			document.querySelector('#channel-btn').onclick = () => {
+	   				const newchannel = document.querySelector('[name="newchannel"]').value;
+		   			if (newchannel.length > 0) {
+		   				socket.emit('addchannel', {'newchannel': newchannel});
+		   			}
+	   			}
+	   			
 
 	   		});
 
@@ -22,6 +28,8 @@
 	   				channel(data[i]);
 	   			}
 	   		});
+
+
 
     	});
     	const channel_template = Handlebars.compile(document.querySelector('#channel-list').innerHTML);
