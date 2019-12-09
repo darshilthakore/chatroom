@@ -16,7 +16,7 @@ users = {'darshil':123}
 # channels = ['#movies', '#sports', '#tvseries', '#hollywood', '#bollywood']
 # channel_sports = 
 # channel_movies = 
-channels = {"sports": {"darshil": "hey"}, "movies": {"rohan": "hola"} }
+channels = {"sports": {"darshil": ["hey", "12:15"]}, "movies": {"rohan": ["hola", "7:13"]}}
 
 
 
@@ -112,6 +112,15 @@ def loadmessage(data):
 	m = channels[channel]
 	print(f"m is {m}")
 	emit('message loader', m, broadcast=False)
+
+@socketio.on('updatemessage')
+def updatemessage(data):
+	channels[channel][name][0] = data["msg"]
+	channels[channel][name][1] = data["time"]
+	print(f" this is the update channel info : {channels}")
+	m = channels[channel]
+	print(f"m is :  {m}")
+	emit('message loader', m, broadcast=True)
 
 
 

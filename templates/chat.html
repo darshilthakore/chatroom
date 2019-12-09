@@ -34,7 +34,14 @@
 		   			}
 	   			}
 
-	   			
+	   			document.querySelector('#sendmessage').onclick = () => {
+					const channel = localStorage.getItem('channel');
+		    		const name = document.querySelector('#displayname').data("displayname");
+		    		const msg = document.querySelector('[name="message"]').value;
+		    		const time = timeStamp();
+		    		//message(n,d,t);
+		    		socket.emit('updatemessage', {'channel': channel, 'name': name, 'msg': msg, 'time': time});
+		    	}
 
 	   		});	
 
@@ -43,7 +50,9 @@
 	   				const element = event.target;
 	   				if (element.className === 'list'){
 	   					channel = element.getAttribute('data-channel');
+	   					document.querySelector('#chatarea').innerHTML = "";
 	   					socket.emit('loadmessage', {'channel': channel});
+	   					localStorage.setItem('channel', channel);
 	   				}
 	   			});
 	   		});
@@ -58,13 +67,15 @@
 
 	   		socket.on('message loader', data => {
 	   			for (i in data) {
+	   				document.querySelector('#chatarea').innerHTML = "";
 	   				const user = i;
-	   				const msg = data[i];
-	   				const t = timeStamp();
+	   				const msg = data[i][0];
+	   				const t = data[i][1];
 	   				message(user,msg,t);
 	   			}
 
 	   		});
+
 
 
 
@@ -88,10 +99,14 @@
     	}
 
 
+    	
+
+
     </script>
 </head>
 
 <body>
+	<meta id="displayname" data-displayname="{{displayname}}">
 	<header class="heading">Hello</header>
 	<div class="sidenav">
 		<div class="channel-list">	
