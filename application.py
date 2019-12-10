@@ -90,7 +90,7 @@ def connect():
 	data = []
 	for channel in channels:
 		data.append(channel)
-	print(data)
+	print(f"these are the channels {data}")
 	emit('response', data, broadcast=False)
 
 @socketio.on('addchannel')
@@ -98,10 +98,11 @@ def addchannel(data):
 	print(f"adding a new channel {data}")
 	newchannel = data["newchannel"]
 	m = []
-	m.append(newchannel)
-	channels[newchannel] = {}
-	print(channels)
-	print(m)
+	channels[newchannel] = []
+	for channel in channels:
+		m.append(channel)
+	print(f"updated data structure: {channels}")
+	print(f"update list of channels:  {m}")
 	emit('response', m, broadcast=True)
 
 
@@ -110,7 +111,7 @@ def loadmessage(data):
 	print(f"loading the existing messages of {data}")
 	channel = data["channel"]
 	m = channels[channel]
-	print(f"m is {m}")
+	print(f"messages are:  {m}")
 	emit('message loader', m, broadcast=False)
 
 @socketio.on('updatemessage')
@@ -126,7 +127,7 @@ def updatemessage(data):
 	print(f" this is the update channel info : {channels}")
 	m = channels[channel]
 
-	print(f"m is :  {m}")
+	print(f"messages of this channel are :  {m}")
 	emit('message loader', m, broadcast=True)
 
 

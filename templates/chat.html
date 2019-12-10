@@ -52,7 +52,7 @@
    				const element = event.target;
    				if (element.className === 'list'){
    					channel = element.getAttribute('data-channel');
-   					document.querySelector('#chatarea').innerHTML = "";
+   					//document.querySelector('#chatarea').innerHTML = "";
    					socket.emit('loadmessage', {'channel': channel});
    					localStorage.setItem('channel', channel);
    				}
@@ -61,6 +61,7 @@
 	   		
 
 	   		socket.on('response', data => {
+	   			document.querySelector('.channel-list').innerHTML = "";
 	   			for(i = 0; i < data.length; i++) {
 	   				channel(data[i]);
 	   			}
