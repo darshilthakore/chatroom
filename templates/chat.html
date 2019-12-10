@@ -34,28 +34,29 @@
 		   			}
 	   			}
 
-	   			document.querySelector('#sendmessage').onclick = () => {
-					const channel = localStorage.getItem('channel');
-		    		const name = document.querySelector('#displayname').data("displayname");
-		    		const msg = document.querySelector('[name="message"]').value;
-		    		const time = timeStamp();
-		    		//message(n,d,t);
-		    		socket.emit('updatemessage', {'channel': channel, 'name': name, 'msg': msg, 'time': time});
-		    	}
+
 
 	   		});	
 
-	   		socket.on('connect', () => {
-	   			document.addEventListener('click', event => {
-	   				const element = event.target;
-	   				if (element.className === 'list'){
-	   					channel = element.getAttribute('data-channel');
-	   					document.querySelector('#chatarea').innerHTML = "";
-	   					socket.emit('loadmessage', {'channel': channel});
-	   					localStorage.setItem('channel', channel);
-	   				}
-	   			});
-	   		});
+   			document.querySelector('#sendmessage').onclick = () => {
+				const channel = "sports";
+	    		const name = "brian";
+	    		const msg = document.querySelector('[name="message"]').value;
+	    		const time = timeStamp();
+	    		//message(n,d,t);
+	    		socket.emit('updatemessage', {'channel':channel, 'name':name, 'msg':msg, 'time':time});
+	    	}
+
+
+   			document.addEventListener('click', event => {
+   				const element = event.target;
+   				if (element.className === 'list'){
+   					channel = element.getAttribute('data-channel');
+   					document.querySelector('#chatarea').innerHTML = "";
+   					socket.emit('loadmessage', {'channel': channel});
+   					localStorage.setItem('channel', channel);
+   				}
+   			});
 
 	   		
 
@@ -76,27 +77,27 @@
 
 	   		});
 
+	    	const channel_template = Handlebars.compile(document.querySelector('#channel-list').innerHTML);
+	    	function channel(channel) {
+	    		const ch = channel_template({'channel': channel});
+	    		document.querySelector('.channel-list').innerHTML += ch;
+	    	}
+
+	    	function timeStamp() {
+	    		var d = new Date();
+	    		var n = d.toLocaleTimeString();
+	    		return n;
+			}
+
+			const msg_template = Handlebars.compile(document.querySelector('#message').innerHTML);
+	    	function message(displayname,message,time) {
+	    		const msg = msg_template({'displayname': displayname, 'message': message, 'time': time});
+	    		document.querySelector('#chatarea').innerHTML += msg;
+	    	}
 
 
 
     	});
-    	const channel_template = Handlebars.compile(document.querySelector('#channel-list').innerHTML);
-    	function channel(channel) {
-    		const ch = channel_template({'channel': channel});
-    		document.querySelector('.channel-list').innerHTML += ch;
-    	}
-
-    	function timeStamp() {
-    		var d = new Date();
-    		var n = d.toLocaleTimeString();
-    		return n;
-		}
-
-		const msg_template = Handlebars.compile(document.querySelector('#message').innerHTML);
-    	function message(displayname,message,time) {
-    		const msg = msg_template({'displayname': displayname, 'message': message, 'time': time});
-    		document.querySelector('#chatarea').innerHTML += msg;
-    	}
 
 
     	

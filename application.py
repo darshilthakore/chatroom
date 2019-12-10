@@ -115,10 +115,17 @@ def loadmessage(data):
 
 @socketio.on('updatemessage')
 def updatemessage(data):
-	channels[channel][name][0] = data["msg"]
-	channels[channel][name][1] = data["time"]
+	print("initialised")
+	channel = data["channel"]
+	print(f"channel to which message is being add to {channel}")
+	name = data["name"]
+	print(f"name of user: {name} ")
+	
+	channels[channel][name] = [data["msg"], data["time"]]
+
 	print(f" this is the update channel info : {channels}")
 	m = channels[channel]
+
 	print(f"m is :  {m}")
 	emit('message loader', m, broadcast=True)
 
