@@ -16,9 +16,9 @@ users = {'darshil':123}
 # channels = ['#movies', '#sports', '#tvseries', '#hollywood', '#bollywood']
 # channel_sports = 
 # channel_movies = 
-channels = {"sports": {"darshil": ["hey", "12:15"]}, "movies": {"rohan": ["hola", "7:13"]}}
+# channels = {"sports": {"darshil": [["hey", "12:15"]]}, "movies": {"rohan": [["hola", "7:13"]]}}
 
-
+channels = {"sports": [["darshil","hey","12:15"]], "movies": [["rohan","hola","7:13"]] }
 
 
 @app.route("/")
@@ -121,8 +121,8 @@ def updatemessage(data):
 	name = data["name"]
 	print(f"name of user: {name} ")
 	
-	channels[channel][name] = [data["msg"], data["time"]]
-
+	# channels[channel][name] = [data["msg"], data["time"]]
+	channels[channel].append([data["name"], data["msg"], data["time"]])
 	print(f" this is the update channel info : {channels}")
 	m = channels[channel]
 

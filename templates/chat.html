@@ -39,8 +39,8 @@
 	   		});	
 
    			document.querySelector('#sendmessage').onclick = () => {
-				const channel = "sports";
-	    		const name = "brian";
+				const channel = localStorage.getItem('channel')
+	    		const name = document.querySelector('#displayname').getAttribute('data-displayname');
 	    		const msg = document.querySelector('[name="message"]').value;
 	    		const time = timeStamp();
 	    		//message(n,d,t);
@@ -67,12 +67,13 @@
 	   		});
 
 	   		socket.on('message loader', data => {
-	   			for (i in data) {
-	   				document.querySelector('#chatarea').innerHTML = "";
-	   				const user = i;
-	   				const msg = data[i][0];
-	   				const t = data[i][1];
-	   				message(user,msg,t);
+	   			document.querySelector('#chatarea').innerHTML = "";
+	   			for (i = 0; i < data.length; i++) {
+	   				msg_details = data[i];
+	   				const user = msg_details[0];
+	   				const msg = msg_details[1];
+	   				const time = msg_details[2];
+	   				message(user,msg,time);
 	   			}
 
 	   		});
