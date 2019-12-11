@@ -26,7 +26,10 @@
     	document.addEventListener('DOMContentLoaded', () => {
 	   		var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
+
 	   		socket.on('connect', () => {
+
+	   			//on creating a new channel
 	   			document.querySelector('#channel-btn').onclick = () => {
 	   				const newchannel = document.querySelector('[name="newchannel"]').value;
 		   			if (newchannel.length > 0) {
@@ -37,9 +40,9 @@
 
 
 	   		});	
-
+	   		//on sending a message
    			document.querySelector('#sendmessage').onclick = () => {
-				const channel = localStorage.getItem('channel')
+				const channel = sessionStorage.getItem('channel')
 	    		const name = document.querySelector('#displayname').getAttribute('data-displayname');
 	    		const msg = document.querySelector('[name="message"]').value;
 	    		const time = timeStamp();
@@ -47,19 +50,22 @@
 	    		socket.emit('updatemessage', {'channel':channel, 'name':name, 'msg':msg, 'time':time});
 	    	}
 
-
+	    	//on clicking an existing channel
    			document.addEventListener('click', event => {
    				const element = event.target;
    				if (element.className === 'list'){
    					channel = element.getAttribute('data-channel');
-   					//document.querySelector('#chatarea').innerHTML = "";
+   					//socket.emit('leave', {'room':channel});
+   					sessionStorage.setItem('channel', channel);
+   					//const name = document.querySelector('#displayname').getAttribute('data-displayname');
+   					socket.emit('join', {'room': channel});
+   					document.querySelector('#chatarea').innerHTML = "";
    					socket.emit('loadmessage', {'channel': channel});
-   					localStorage.setItem('channel', channel);
    				}
    			});
 
 	   		
-
+   			//updates the existing channel lists
 	   		socket.on('response', data => {
 	   			document.querySelector('.channel-list').innerHTML = "";
 	   			for(i = 0; i < data.length; i++) {
@@ -67,6 +73,7 @@
 	   			}
 	   		});
 
+	   		//loads the messages in chat area
 	   		socket.on('message loader', data => {
 	   			document.querySelector('#chatarea').innerHTML = "";
 	   			for (i = 0; i < data.length; i++) {
@@ -79,18 +86,24 @@
 
 	   		});
 
+
+	   		//template for channels
 	    	const channel_template = Handlebars.compile(document.querySelector('#channel-list').innerHTML);
 	    	function channel(channel) {
 	    		const ch = channel_template({'channel': channel});
 	    		document.querySelector('.channel-list').innerHTML += ch;
 	    	}
 
+
+	    	//function to get current timestamp
 	    	function timeStamp() {
 	    		var d = new Date();
 	    		var n = d.toLocaleTimeString();
 	    		return n;
 			}
 
+
+			//template for messages
 			const msg_template = Handlebars.compile(document.querySelector('#message').innerHTML);
 	    	function message(displayname,message,time) {
 	    		const msg = msg_template({'displayname': displayname, 'message': message, 'time': time});

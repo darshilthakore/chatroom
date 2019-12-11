@@ -4,7 +4,7 @@ import requests
 
 from flask import Flask, render_template, request, jsonify, session, url_for, redirect
 from flask_session import Session
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room, leave_room, send
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
@@ -77,6 +77,31 @@ def newuser():
 # 	m = channels[-1]
 # 	return jsonify(m)
 
+active_user = {}
+
+@socketio.on('join')
+def on_join(data):
+    username = session['displayname']
+    room = data['room']
+    for activechannel in active_user[username]:
+    	for channel in activechannel:
+    		if channel ==  room and activechannel[channel] == False:
+    			activechannel[channel] = True
+    		else:
+    			activechannel[channel] = False
+    join_room(room)
+    print(f"{username} joined {room}")
+    print(f"active user info is : {active_user}")
+    send(username + ' has entered the room.', room=room)
+
+@socketio.on('leave')
+def on_leave(data):
+    username = session['displayname']
+    room = data['room']
+    leave_room(room)
+    print(f"{username} left {room}")
+    send(username + ' has left the room.')
+
 
 @socketio.on("load channels")
 def loadchannels():
@@ -87,14 +112,22 @@ def loadchannels():
 @socketio.on('connect')
 def connect():
 	print("socket connected")
+	user = session['displayname']
 	data = []
 	for channel in channels:
 		data.append(channel)
 	print(f"these are the channels {data}")
+	active_user[user] = []
+	for channel in channels:
+		active_user[user].append({channel:False})
+
+	print(f"active user info is : {active_user}")
+
 	emit('response', data, broadcast=False)
 
 @socketio.on('addchannel')
 def addchannel(data):
+	user = session['displayname']
 	print(f"adding a new channel {data}")
 	newchannel = data["newchannel"]
 	m = []
@@ -103,6 +136,8 @@ def addchannel(data):
 		m.append(channel)
 	print(f"updated data structure: {channels}")
 	print(f"update list of channels:  {m}")
+	active_user[user].append({newchannel:False})
+	print(f"active user info is : {active_user}")
 	emit('response', m, broadcast=True)
 
 
@@ -126,9 +161,22 @@ def updatemessage(data):
 	channels[channel].append([data["name"], data["msg"], data["time"]])
 	print(f" this is the update channel info : {channels}")
 	m = channels[channel]
-
-	print(f"messages of this channel are :  {m}")
-	emit('message loader', m, broadcast=True)
+	other_users = []
+	for user in active_user:
+		if user != name:
+			other_users.append(user)
+	for other_user in other_users:
+		for channel_name in active_user[other_user]:
+			try:
+				if channel_name[channel] == False:
+					print(f"messages of this channel are :  {m}")
+					emit('message loader', m, broadcast=False)
+				else:
+					print(f"messages of this channel are :  {m}")
+					emit('message loader', m, broadcast=True)
+			except KeyError:
+				print("not the channel we're looking for")
+				
 
 
 
