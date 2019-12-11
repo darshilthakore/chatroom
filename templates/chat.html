@@ -28,7 +28,9 @@
 
 
 	   		socket.on('connect', () => {
-
+	   			const channel = "general";
+	   			socket.emit('join', {'room': channel});
+	   			sessionStorage.setItem('channel', channel);
 	   			//on creating a new channel
 	   			document.querySelector('#channel-btn').onclick = () => {
 	   				const newchannel = document.querySelector('[name="newchannel"]').value;
@@ -54,13 +56,16 @@
    			document.addEventListener('click', event => {
    				const element = event.target;
    				if (element.className === 'list'){
-   					channel = element.getAttribute('data-channel');
+   					const channel = sessionStorage.getItem('channel');
+   					socket.emit('leave', {'room': channel});
+   					sessionStorage.clear();
+   					new_channel = element.getAttribute('data-channel');
    					//socket.emit('leave', {'room':channel});
-   					sessionStorage.setItem('channel', channel);
+   					sessionStorage.setItem('channel', new_channel);
    					//const name = document.querySelector('#displayname').getAttribute('data-displayname');
-   					socket.emit('join', {'room': channel});
-   					document.querySelector('#chatarea').innerHTML = "";
-   					socket.emit('loadmessage', {'channel': channel});
+   					socket.emit('join', {'room': new_channel});
+   					//document.querySelector('#chatarea').innerHTML = "";
+   					socket.emit('loadmessage', {'channel': new_channel});
    				}
    			});
 
@@ -84,6 +89,12 @@
 	   				message(user,msg,time);
 	   			}
 
+	   		});
+
+
+	   		socket.on('chat response', data => {
+	   			const msg = data;
+	   			document.querySelector('#chatarea').innerHTML += msg;
 	   		});
 
 

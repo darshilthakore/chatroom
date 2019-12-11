@@ -83,16 +83,17 @@ active_user = {}
 def on_join(data):
     username = session['displayname']
     room = data['room']
-    for activechannel in active_user[username]:
-    	for channel in activechannel:
-    		if channel ==  room and activechannel[channel] == False:
-    			activechannel[channel] = True
-    		else:
-    			activechannel[channel] = False
+    # for activechannel in active_user[username]:
+    # 	for channel in activechannel:
+    # 		if channel ==  room and activechannel[channel] == False:
+    # 			activechannel[channel] = True
+    # 		else:
+    # 			activechannel[channel] = False
     join_room(room)
     print(f"{username} joined {room}")
-    print(f"active user info is : {active_user}")
-    send(username + ' has entered the room.', room=room)
+    #print(f"active user info is : {active_user}")
+    m = username + "joined the chat"
+    emit('chat join response', m, room=room)
 
 @socketio.on('leave')
 def on_leave(data):
@@ -100,7 +101,8 @@ def on_leave(data):
     room = data['room']
     leave_room(room)
     print(f"{username} left {room}")
-    send(username + ' has left the room.')
+    m = username + "left the chat"
+    emit('chat join response', m, room=room)
 
 
 @socketio.on("load channels")
@@ -117,11 +119,11 @@ def connect():
 	for channel in channels:
 		data.append(channel)
 	print(f"these are the channels {data}")
-	active_user[user] = []
-	for channel in channels:
-		active_user[user].append({channel:False})
+	# active_user[user] = []
+	# for channel in channels:
+	# 	active_user[user].append({channel:False})
 
-	print(f"active user info is : {active_user}")
+	# print(f"active user info is : {active_user}")
 
 	emit('response', data, broadcast=False)
 
@@ -136,8 +138,8 @@ def addchannel(data):
 		m.append(channel)
 	print(f"updated data structure: {channels}")
 	print(f"update list of channels:  {m}")
-	active_user[user].append({newchannel:False})
-	print(f"active user info is : {active_user}")
+	# active_user[user].append({newchannel:False})
+	# print(f"active user info is : {active_user}")
 	emit('response', m, broadcast=True)
 
 
@@ -147,7 +149,7 @@ def loadmessage(data):
 	channel = data["channel"]
 	m = channels[channel]
 	print(f"messages are:  {m}")
-	emit('message loader', m, broadcast=False)
+	emit('message loader', m, broadcast=False, room=channel)
 
 @socketio.on('updatemessage')
 def updatemessage(data):
@@ -161,21 +163,23 @@ def updatemessage(data):
 	channels[channel].append([data["name"], data["msg"], data["time"]])
 	print(f" this is the update channel info : {channels}")
 	m = channels[channel]
-	other_users = []
-	for user in active_user:
-		if user != name:
-			other_users.append(user)
-	for other_user in other_users:
-		for channel_name in active_user[other_user]:
-			try:
-				if channel_name[channel] == False:
-					print(f"messages of this channel are :  {m}")
-					emit('message loader', m, broadcast=False)
-				else:
-					print(f"messages of this channel are :  {m}")
-					emit('message loader', m, broadcast=True)
-			except KeyError:
-				print("not the channel we're looking for")
+	# other_users = []
+	# for user in active_user:
+	# 	if user != name:
+	# 		other_users.append(user)
+	# for other_user in other_users:
+	# 	for channel_name in active_user[other_user]:
+	# 		try:
+	# 			if channel_name[channel] == False:
+	# 				print(f"messages of this channel are :  {m}")
+	# 				emit('message loader', m, broadcast=False)
+	# 			else:
+	# 				print(f"messages of this channel are :  {m} and we are broadcating it to {other_user}")
+	# 				emit('message loader', m, broadcast=True)
+	# 		except KeyError:
+	# 			print("not the channel we're looking for")
+	print(f"messages of this channel are: {m}")
+	emit('message loader', m, broadcast=True, room=channel)
 				
 
 
