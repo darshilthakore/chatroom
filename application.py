@@ -168,6 +168,9 @@ def loadmessage(data):
 	print(f"loading the existing messages of {data}")
 	channel = data["channel"]
 	m = channels[channel]
+	if len(m) > 100:
+		n = len(m)-100
+		del m[0:n]
 	print(f"messages are:  {m}")
 	emit('message loader', m, broadcast=False, room=channel)
 

@@ -7,6 +7,11 @@
 	   			socket.emit('join', {'room': channel});
 	   			sessionStorage.setItem('channel', channel);
 	   			//on creating a new channel
+	   			if (channel == "general"){
+	   				document.querySelector('#sendmessage').disabled = true;
+	   				document.querySelector('[name="message"]').disabled = true;
+	   			}
+	   			
 	   			document.querySelector('#channel-btn').disabled = true;
 	   			document.querySelector('[name="newchannel"]').onkeyup = () => {
 	   				const newchannel = document.querySelector('[name="newchannel"]').value;
@@ -83,8 +88,11 @@
    					socket.emit('loadmessage', {'channel': new_channel});
    					document.querySelector('.heading').innerHTML = new_channel;
    					document.querySelector('[name="message"]').value = "";
+   					document.querySelector('#sendmessage').disabled = false;
+	   				document.querySelector('[name="message"]').disabled = false;
    				}
    			});
+
 
 	   		
    			//updates the existing channel lists
