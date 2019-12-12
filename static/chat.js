@@ -3,11 +3,11 @@
 
 
 	   		socket.on('connect', () => {
-	   			const channel = "general";
-	   			socket.emit('join', {'room': channel});
-	   			sessionStorage.setItem('channel', channel);
+	   			//const channel = "general";
+	   			//socket.emit('join', {'room': channel});
+	   			//sessionStorage.setItem('channel', channel);
 	   			//on creating a new channel
-	   			if (channel == "general"){
+	   			if (!sessionStorage.getItem('channel')){
 	   				document.querySelector('#sendmessage').disabled = true;
 	   				document.querySelector('[name="message"]').disabled = true;
 	   			}
@@ -76,9 +76,14 @@
    			document.addEventListener('click', event => {
    				const element = event.target;
    				if (element.className === 'list'){
-   					const channel = sessionStorage.getItem('channel');
-   					socket.emit('leave', {'room': channel});
-   					sessionStorage.clear();
+   					if (sessionStorage.getItem('channel')) {
+   						const channel = sessionStorage.getItem('channel');
+   						socket.emit('leave', {'room': channel});
+   						sessionStorage.clear();
+
+   					}
+
+   					
    					new_channel = element.getAttribute('data-channel');
    					//socket.emit('leave', {'room':channel});
    					sessionStorage.setItem('channel', new_channel);
