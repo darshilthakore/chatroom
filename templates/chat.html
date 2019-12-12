@@ -61,16 +61,16 @@
 
 					//send the displayname  along with the request
 					const data = new FormData();
-					data.append('displayname', displayname);
+					data.append('entered_channel', newchannel);
 					//send request
 
 					request.send(data);
 
 
 
-	   			}
+	   			};
 	   			document.querySelector('#channel-btn').onclick = () => {
-	   				
+	   				const newchannel = document.querySelector('[name="newchannel"]').value;
 		   			if (newchannel.length > 0) {
 		   				socket.emit('addchannel', {'newchannel': newchannel});
 		   			}
@@ -158,6 +158,11 @@
 	    	function message(displayname,message,time) {
 	    		const msg = msg_template({'displayname': displayname, 'message': message, 'time': time});
 	    		document.querySelector('#chatarea').innerHTML += msg;
+	    	}
+
+	    	document.querySelector('.heading').onclick = () => {
+	    		window.scrollBy(0,0);
+
 	    	}
 
 
