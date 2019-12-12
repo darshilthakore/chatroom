@@ -54,6 +54,9 @@ def checkchannelname():
 	try:
 		if channels[entered_channel]:
 			return jsonify({"available": False, "msg": "channel with same name exists"})
+		if channels[entered_channel] == []:
+			return jsonify({"available": False, "msg": "channel with same name exists"})
+
 	except KeyError:
 		return jsonify({"available": True, "msg": "valid channel name"})
 
