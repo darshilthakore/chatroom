@@ -32,8 +32,45 @@
 	   			socket.emit('join', {'room': channel});
 	   			sessionStorage.setItem('channel', channel);
 	   			//on creating a new channel
-	   			document.querySelector('#channel-btn').onclick = () => {
+	   			document.querySelector('#channel-btn').disabled = true;
+	   			document.querySelector('[name="newchannel"]').onkeyup = () => {
 	   				const newchannel = document.querySelector('[name="newchannel"]').value;
+	   				if (newchannel.length > 0) {
+	   					document.querySelector('#channel-btn').disabled = false;
+	   				} else {
+	   					document.querySelector('#channel-btn').disabled = true;
+	   				}
+	   				const request = new XMLHttpRequest();
+					request.open('POST', '/checkchannelname');
+					request.onload = () => {
+						const response = JSON.parse(request.responseText);
+						const msg = `${response.msg}`
+						if (response.available) {
+							document.querySelector('.validation').innerHTML = msg;
+						} else {
+							document.querySelector('.validation').innerHTML = msg;
+							document.querySelector('#channel-btn').disabled = true;
+						}
+
+
+						// document.querySelector('.validation').innerHTML= response;
+						// document.querySelector('[name="newbtn"]').disabled = response.status;
+
+
+					};
+
+					//send the displayname  along with the request
+					const data = new FormData();
+					data.append('displayname', displayname);
+					//send request
+
+					request.send(data);
+
+
+
+	   			}
+	   			document.querySelector('#channel-btn').onclick = () => {
+	   				
 		   			if (newchannel.length > 0) {
 		   				socket.emit('addchannel', {'newchannel': newchannel});
 		   			}
@@ -66,6 +103,7 @@
    					socket.emit('join', {'room': new_channel});
    					//document.querySelector('#chatarea').innerHTML = "";
    					socket.emit('loadmessage', {'channel': new_channel});
+   					document.querySelector('.heading').innerHTML = new_channel;
    				}
    			});
 
@@ -87,6 +125,7 @@
 	   				const msg = msg_details[1];
 	   				const time = msg_details[2];
 	   				message(user,msg,time);
+	   				window.scrollBy(0, document.body.offsetHeight);
 	   			}
 
 	   		});
@@ -134,11 +173,11 @@
 
 <body>
 	<meta id="displayname" data-displayname="{{displayname}}">
-	<header class="heading">Hello</header>
+	<header class="heading">General</header>
 	<div class="sidenav">
 		<div class="channel-list">	
 		</div>
-		<input type="text" name="newchannel"><br>
+		<input type="text" name="newchannel"><br><span class="validation"></span><br>
 		<button id="channel-btn">Create your own Channel</button>
 	</div>
 

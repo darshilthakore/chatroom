@@ -21,6 +21,8 @@ users = {'darshil':123}
 channels = {"sports": [["darshil","hey","12:15"]], "movies": [["rohan","hola","7:13"]] }
 
 
+
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -46,6 +48,16 @@ def checkdispname():
 		return jsonify({"available": True, "msg": "username available"})
 
 
+@app.route("/checkchannelname", methods=["POST","GET"])
+def checkchannelname():
+	entered_channel = request.form.get("entered_channel")
+	try:
+		if channels[entered_channel]:
+			return jsonify({"available": False, "msg": "channel with same name exists"})
+	except KeyError:
+		return jsonify({"available": True, "msg": "valid channel name"})
+
+
 @app.route("/newuser", methods=["POST","GET"])
 def newuser():
 	displayname = request.form.get("displayname")
@@ -54,6 +66,11 @@ def newuser():
 	session['displayname'] = displayname
 
 	return render_template("chat.html",displayname=displayname)
+
+@app.before_request
+def make_session_permanent():
+	session.permanent = True
+
 
 # @app.route("/channels")
 # def channels():
