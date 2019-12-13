@@ -182,6 +182,9 @@
 
 	    	}
 
-
+	    	document.querySelector('#logout').onclick = () => {
+	    		localStorage.clear();
+	    		sessionStorage.clear();
+	    	}
 
     	});

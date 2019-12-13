@@ -28,6 +28,10 @@ def index():
 	try:
 		if session['displayname']:
 			print('redirecting to a previous session')
+			m = []
+			for user in users:
+				m.append(user)
+			print(f"users are {m}")
 			return redirect(url_for('mainpage', displayname=session['displayname']))
 	except KeyError:
 		print("new session")
@@ -72,6 +76,10 @@ def newuser():
 	displayname = request.form.get("displayname")
 	password = request.form.get("password-login")
 	users[displayname] = password
+	m = []
+	for user in users:
+		m.append(user)
+	print(f"users are: {m}")
 	session['displayname'] = displayname
 
 	return render_template("chat.html",displayname=displayname)
@@ -84,6 +92,15 @@ def mainpage():
 def make_session_permanent():
 	session.permanent = True
 
+@app.route("/logout")
+def logout():
+	try:
+		users.pop(session['displayname'])
+		session.pop('displayname', None)
+		return redirect(url_for('index'))
+	except KeyError:
+		session.pop('displayname', None)
+		return redirect(url_for('index'))
 
 # @app.route("/channels")
 # def channels():
