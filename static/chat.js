@@ -2,6 +2,30 @@
 	   		var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
 
+	   		//on window closed without logging out, save the channel info on localstorage
+	   		// window.addEventListener("unload", () => {
+	   		// 	const saveinfo = sessionStorage.getItem('channel');
+	   		// 	localStorage.setItem('saveinfo', saveinfo);
+	   		// 	console.log('saving the channel info');
+
+	   		// });
+
+	   		if (localStorage.getItem('retrieve_channel')) {
+	   			console.log(localStorage.getItem('retrieve_channel'));
+	   			const load_closed_channel = localStorage.getItem('retrieve_channel');
+	   			socket.emit('join', {'room': load_closed_channel});
+	   			socket.emit('loadmessage', {'channel': load_closed_channel});
+	   			document.querySelector('.heading').innerHTML = load_closed_channel;
+				document.querySelector('[name="message"]').value = "";
+				document.querySelector('#sendmessage').disabled = false;
+				document.querySelector('[name="message"]').disabled = false;
+				console.log('retrieving the channel info');
+				//console.log('deleting the local storage for retrieving the channel');
+				//localStorage.removeItem('retrieve_channel');
+
+	   		}
+
+
 	   		socket.on('connect', () => {
 	   			//const channel = "general";
 	   			//socket.emit('join', {'room': channel});
@@ -87,6 +111,7 @@
    					new_channel = element.getAttribute('data-channel');
    					//socket.emit('leave', {'room':channel});
    					sessionStorage.setItem('channel', new_channel);
+   					localStorage.setItem('retrieve_channel', new_channel);
    					//const name = document.querySelector('#displayname').getAttribute('data-displayname');
    					socket.emit('join', {'room': new_channel});
    					//document.querySelector('#chatarea').innerHTML = "";

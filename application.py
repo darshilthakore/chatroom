@@ -25,7 +25,13 @@ channels = {"sports": [["darshil","hey","12:15"]], "movies": [["rohan","hola","7
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+	try:
+		if session['displayname']:
+			print('redirecting to a previous session')
+			return redirect(url_for('mainpage', displayname=session['displayname']))
+	except KeyError:
+		print("new session")
+		return render_template("index.html")
 
 
 # route to check displayname availability
@@ -69,6 +75,10 @@ def newuser():
 	session['displayname'] = displayname
 
 	return render_template("chat.html",displayname=displayname)
+
+@app.route("/mainpage")
+def mainpage():
+	return render_template("chat.html", displayname=session['displayname'])
 
 @app.before_request
 def make_session_permanent():
