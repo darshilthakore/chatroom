@@ -22,6 +22,20 @@
     	</div>
     	
     </script>
+	<script id="entered_message" type="text/x-handlebars-template">
+    	<div class="message">
+    		<span id="displayname">{% raw -%}{{ displayname }} {%- endraw %}</span>
+    		<span> :
+    		 {% raw -%}
+    			{{ message }}
+    		 {%- endraw %}
+    		</span>
+    		<span id="timestamp">
+    			<i>{% raw -%} {{ time }} {%- endraw %} </i>
+    		</span>
+    	</div>
+    	
+    </script>    
     <script src="{{ url_for('static', filename='chat.js')}}"></script>
 
 </head>

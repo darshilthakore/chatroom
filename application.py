@@ -212,7 +212,7 @@ def updatemessage(data):
 	# channels[channel][name] = [data["msg"], data["time"]]
 	channels[channel].append([data["name"], data["msg"], data["time"]])
 	print(f" this is the update channel info : {channels}")
-	m = channels[channel]
+	m = channels[channel][-1]
 	# other_users = []
 	# for user in active_user:
 	# 	if user != name:
@@ -229,7 +229,7 @@ def updatemessage(data):
 	# 		except KeyError:
 	# 			print("not the channel we're looking for")
 	print(f"messages of this channel are: {m}")
-	emit('message loader', m, broadcast=True, room=channel)
+	emit('new message', m, broadcast=True, room=channel)
 				
 
 

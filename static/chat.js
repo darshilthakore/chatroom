@@ -148,6 +148,15 @@
 	   		});
 
 
+	   		socket.on('new message', data => {
+	   			new_msg_details = data;
+	   			const user = new_msg_details[0];
+	   			const msg = new_msg_details[1];
+	   			const time = new_msg_details[2];
+	   			entered_message(user,msg,time);
+	   			window.scrollBy(0, document.body.offsetHeight);
+	   		});
+
 	   		socket.on('chat response', data => {
 	   			const msg = data;
 	   			document.querySelector('#chatarea').innerHTML += msg;
@@ -177,10 +186,20 @@
 	    		document.querySelector('#chatarea').innerHTML += msg;
 	    	}
 
+
+	    	//template for entered messages
+			const entered_msg_template = Handlebars.compile(document.querySelector('#entered_message').innerHTML);
+	    	function entered_message(displayname,message,time) {
+	    		const msg = entered_msg_template({'displayname': displayname, 'message': message, 'time': time});
+	    		document.querySelector('#chatarea').innerHTML += msg;
+	    	}
+
 	    	document.querySelector('.heading').onclick = () => {
 	    		window.scrollBy(0,0);
 
 	    	}
+
+	    	
 
 	    	document.querySelector('#logout').onclick = () => {
 	    		localStorage.clear();
