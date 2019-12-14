@@ -87,38 +87,50 @@
 	   		});	
 	   		//on sending a message
    			document.querySelector('#userinput').onsubmit = () => {
-				
-	    		
-
-	    		const request = new XMLHttpRequest();
-	    		const image = document.querySelector('#attachment').files[0];
-	    		request.open('POST', '/upload');
-	    		//const source = window.URL.createObjectURL(image);
-	    		// if (msg.length > 0) {
-	    		// 	document.getElementById("myFile").disabled = true;
-	    		// } else {
-	    		// 	document.getElementById("myFile").disabled = false;
-	    		// }
-	    		request.onload = () => {
-	    			const data = JSON.parse(request.responseText);
-	    			const filename = `${data.filename}`
-	    			const channel = sessionStorage.getItem('channel');
+				if (document.querySelector('#attachment').value == '') {
+					const channel = sessionStorage.getItem('channel');
 		    		const name = document.querySelector('#displayname').getAttribute('data-displayname');
 		    		const msg = document.querySelector('[name="message"]').value;
-	    			const time = timeStamp();
-	    			console.log("on load request");
-	    			console.log(filename);
-		    		//message(n,d,t);
-		    		document.querySelector('[name="message"]').value = "";
+		    		const filename = '';
+		    		const time = timeStamp();
+		    		console.log("sending a solo text");
 		    		socket.emit('updatemessage', {'channel':channel, 'name':name, 'msg':msg, 'time':time, 'filename':filename});
-	    		}
-	    		//console.log(window.filename);
-	    		//return false;
-	    		const data = new FormData();
-	    		data.append('image', image);
-	    		request.send(data);
+		    		return false;
+				} else {
+					const request = new XMLHttpRequest();
+		    		const image = document.querySelector('#attachment').files[0];
+		    		request.open('POST', '/upload');
+		    		//const source = window.URL.createObjectURL(image);
+		    		// if (msg.length > 0) {
+		    		// 	document.getElementById("myFile").disabled = true;
+		    		// } else {
+		    		// 	document.getElementById("myFile").disabled = false;
+		    		// }
+		    		request.onload = () => {
+		    			const data = JSON.parse(request.responseText);
+		    			const filename = `${data.filename}`
+		    			const channel = sessionStorage.getItem('channel');
+			    		const name = document.querySelector('#displayname').getAttribute('data-displayname');
+			    		const msg = document.querySelector('[name="message"]').value;
+		    			const time = timeStamp();
+		    			console.log("on load request");
+		    			console.log(filename);
+			    		//message(n,d,t);
+			    		document.querySelector('[name="message"]').value = "";
+			    		socket.emit('updatemessage', {'channel':channel, 'name':name, 'msg':msg, 'time':time, 'filename':filename});
+		    		}
+		    		//console.log(window.filename);
+		    		//return false;
+		    		const data = new FormData();
+		    		data.append('image', image);
+		    		request.send(data);
+		    		document.querySelector('#attachment').value = '';
+		    		return false;
+
+				}
 	    		
-	    		return false;
+
+	    		
 	    	}
 
 	    	//on clicking an existing channel
