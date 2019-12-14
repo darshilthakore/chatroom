@@ -16,8 +16,8 @@
     			{{ message }}
     		 {%- endraw %}
     		</span>
-    		<img></img>
-    		<img src="{% raw -%} {{source}} {%- endraw %}", height="60", width="60">
+ 
+    		<img alt="" src="/static/{% raw -%}{{ filename }}{%- endraw %}" height="60" width="60">
     		<span id="timestamp">
     			<i>{% raw -%} {{ time }} {%- endraw %} </i>
     		</span>
@@ -33,13 +33,9 @@
     			{{ message }}
     		 {%- endraw %}
     		</span>
-    		<img src="{% raw -%} {{source}} {%- endraw %}", height="60", width="60">
+    		<img alt="" src="/static/{% raw -%}{{ filename }}{%- endraw %}" height="60" width="60">
     		<span id="timestamp">
     			<i>{% raw -%} {{ time }} {%- endraw %} </i>
-    		</span>
-    		
-    	</div>
-    	
     </script>    
     <script src="{{ url_for('static', filename='chat.js')}}"></script>
 
@@ -68,9 +64,9 @@
 	</div>
 	
 	<div class="message-box">
-	
+		<form id="userinput" enctype="multipart/form-data" method="POST">
 		<input type="text" name="message"><input type="file" id="attachment"><button id="sendmessage">Send</button>
-		
+		</form>
 	</div>
 
 </body>

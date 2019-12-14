@@ -86,21 +86,39 @@
 
 	   		});	
 	   		//on sending a message
-   			document.querySelector('#sendmessage').onclick = () => {
-				const channel = sessionStorage.getItem('channel')
-	    		const name = document.querySelector('#displayname').getAttribute('data-displayname');
-	    		const msg = document.querySelector('[name="message"]').value;
+   			document.querySelector('#userinput').onsubmit = () => {
+				
+	    		
+
+	    		const request = new XMLHttpRequest();
 	    		const image = document.querySelector('#attachment').files[0];
-	    		const source = window.URL.createObjectURL(image);
+	    		request.open('POST', '/upload');
+	    		//const source = window.URL.createObjectURL(image);
 	    		// if (msg.length > 0) {
 	    		// 	document.getElementById("myFile").disabled = true;
 	    		// } else {
 	    		// 	document.getElementById("myFile").disabled = false;
 	    		// }
-	    		const time = timeStamp();
-	    		//message(n,d,t);
-	    		document.querySelector('[name="message"]').value = "";
-	    		socket.emit('updatemessage', {'channel':channel, 'name':name, 'msg':msg, 'time':time, 'source':source});
+	    		request.onload = () => {
+	    			const data = JSON.parse(request.responseText);
+	    			const filename = `${data.filename}`
+	    			const channel = sessionStorage.getItem('channel');
+		    		const name = document.querySelector('#displayname').getAttribute('data-displayname');
+		    		const msg = document.querySelector('[name="message"]').value;
+	    			const time = timeStamp();
+	    			console.log("on load request");
+	    			console.log(filename);
+		    		//message(n,d,t);
+		    		document.querySelector('[name="message"]').value = "";
+		    		socket.emit('updatemessage', {'channel':channel, 'name':name, 'msg':msg, 'time':time, 'filename':filename});
+	    		}
+	    		//console.log(window.filename);
+	    		//return false;
+	    		const data = new FormData();
+	    		data.append('image', image);
+	    		request.send(data);
+	    		
+	    		return false;
 	    	}
 
 	    	//on clicking an existing channel
@@ -148,8 +166,8 @@
 	   				const user = msg_details[0];
 	   				const msg = msg_details[1];
 	   				const time = msg_details[2];
-	   				const source = msg_details[3];
-	   				message(user,msg,time,source);
+	   				const filename = msg_details[3];
+	   				message(user,msg,time,filename);
 	   				window.scrollBy(0, document.body.offsetHeight);
 	   			}
 
@@ -161,8 +179,8 @@
 	   			const user = new_msg_details[0];
 	   			const msg = new_msg_details[1];
 	   			const time = new_msg_details[2];
-	   			const source = new_msg_details[3];
-	   			entered_message(user,msg,time,source);
+	   			const filename = new_msg_details[3];
+	   			entered_message(user,msg,time,filename);
 	   			window.scrollBy(0, document.body.offsetHeight);
 	   		});
 
@@ -190,16 +208,16 @@
 
 			//template for messages
 			const msg_template = Handlebars.compile(document.querySelector('#message').innerHTML);
-	    	function message(displayname,message,time,source) {
-	    		const msg = msg_template({'displayname': displayname, 'message': message, 'time': time, 'source':source});
+	    	function message(displayname,message,time,filename) {
+	    		const msg = msg_template({'displayname': displayname, 'message': message, 'time': time, 'filename': filename});
 	    		document.querySelector('#chatarea').innerHTML += msg;
 	    	}
 
 
 	    	//template for entered messages
 			const entered_msg_template = Handlebars.compile(document.querySelector('#entered_message').innerHTML);
-	    	function entered_message(displayname,message,time,source) {
-	    		const msg = entered_msg_template({'displayname': displayname, 'message': message, 'time': time, 'source':source});
+	    	function entered_message(displayname,message,time,filename) {
+	    		const msg = entered_msg_template({'displayname': displayname, 'message': message, 'time': time, 'filename': filename});
 	    		document.querySelector('#chatarea').innerHTML += msg;
 	    	}
 

@@ -5,9 +5,12 @@ import requests
 from flask import Flask, render_template, request, jsonify, session, url_for, redirect
 from flask_session import Session
 from flask_socketio import SocketIO, emit, join_room, leave_room, send
+from werkzeug.utils import secure_filename
+
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+app.config["UPLOAD_FOLDER"] = os.getenv("UPLOAD_FOLDER")
 socketio = SocketIO(app)
 
 
@@ -102,6 +105,17 @@ def logout():
 		session.pop('displayname', None)
 		return redirect(url_for('index'))
 
+
+@app.route("/upload", methods=["POST", "GET"])
+def upload():
+	if request.method == 'POST':
+		print("uplaoding file")
+		file = request.files['image']
+		filename = secure_filename(file.filename)
+		print(f"filename is {filename}")
+		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+		return jsonify({"filename": filename})
+
 # @app.route("/channels")
 # def channels():
 # 	return render_template("channels.html")
@@ -139,7 +153,7 @@ def on_join(data):
     join_room(room)
     print(f"{username} joined {room}")
     #print(f"active user info is : {active_user}")
-    m = username + "joined the chat"
+    m = str(username) + "joined the chat"
     emit('chat join response', m, room=room)
 
 @socketio.on('leave')
@@ -208,9 +222,15 @@ def updatemessage(data):
 	print(f"channel to which message is being add to {channel}")
 	name = data["name"]
 	print(f"name of user: {name} ")
+	# print("saving file")
+	# file = data["source"]
+	# filename = secure_filename(file.filename)
+	# print(f"filename is {filename}")
+	# file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+	# print("file saved")
 	
 	# channels[channel][name] = [data["msg"], data["time"]]
-	channels[channel].append([data["name"], data["msg"], data["time"], data["source"]])
+	channels[channel].append([data["name"], data["msg"], data["time"], data["filename"]])
 	print(f" this is the update channel info : {channels}")
 	m = channels[channel][-1]
 	# other_users = []
