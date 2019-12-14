@@ -103,3 +103,18 @@ body {
   position: fixed;
   bottom: 0;
 }
+
+.image-container{
+
+  width:60px;
+  height:60px;
+  overflow:hidden;
+  background-color: #f1f1f1;
+  /*display:block;*/
+  /*background-color:orange;*/
+}
+
+img{
+  height: 60px;
+  width: 60px;
+}
