@@ -90,10 +90,17 @@
 				const channel = sessionStorage.getItem('channel')
 	    		const name = document.querySelector('#displayname').getAttribute('data-displayname');
 	    		const msg = document.querySelector('[name="message"]').value;
+	    		const image = document.querySelector('#attachment').files[0];
+	    		const source = window.URL.createObjectURL(image);
+	    		// if (msg.length > 0) {
+	    		// 	document.getElementById("myFile").disabled = true;
+	    		// } else {
+	    		// 	document.getElementById("myFile").disabled = false;
+	    		// }
 	    		const time = timeStamp();
 	    		//message(n,d,t);
 	    		document.querySelector('[name="message"]').value = "";
-	    		socket.emit('updatemessage', {'channel':channel, 'name':name, 'msg':msg, 'time':time});
+	    		socket.emit('updatemessage', {'channel':channel, 'name':name, 'msg':msg, 'time':time, 'source':source});
 	    	}
 
 	    	//on clicking an existing channel
@@ -141,7 +148,8 @@
 	   				const user = msg_details[0];
 	   				const msg = msg_details[1];
 	   				const time = msg_details[2];
-	   				message(user,msg,time);
+	   				const source = msg_details[3];
+	   				message(user,msg,time,source);
 	   				window.scrollBy(0, document.body.offsetHeight);
 	   			}
 
@@ -153,7 +161,8 @@
 	   			const user = new_msg_details[0];
 	   			const msg = new_msg_details[1];
 	   			const time = new_msg_details[2];
-	   			entered_message(user,msg,time);
+	   			const source = new_msg_details[3];
+	   			entered_message(user,msg,time,source);
 	   			window.scrollBy(0, document.body.offsetHeight);
 	   		});
 
@@ -181,16 +190,16 @@
 
 			//template for messages
 			const msg_template = Handlebars.compile(document.querySelector('#message').innerHTML);
-	    	function message(displayname,message,time) {
-	    		const msg = msg_template({'displayname': displayname, 'message': message, 'time': time});
+	    	function message(displayname,message,time,source) {
+	    		const msg = msg_template({'displayname': displayname, 'message': message, 'time': time, 'source':source});
 	    		document.querySelector('#chatarea').innerHTML += msg;
 	    	}
 
 
 	    	//template for entered messages
 			const entered_msg_template = Handlebars.compile(document.querySelector('#entered_message').innerHTML);
-	    	function entered_message(displayname,message,time) {
-	    		const msg = entered_msg_template({'displayname': displayname, 'message': message, 'time': time});
+	    	function entered_message(displayname,message,time,source) {
+	    		const msg = entered_msg_template({'displayname': displayname, 'message': message, 'time': time, 'source':source});
 	    		document.querySelector('#chatarea').innerHTML += msg;
 	    	}
 

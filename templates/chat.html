@@ -16,9 +16,12 @@
     			{{ message }}
     		 {%- endraw %}
     		</span>
+    		<img></img>
+    		<img src="{% raw -%} {{source}} {%- endraw %}", height="60", width="60">
     		<span id="timestamp">
     			<i>{% raw -%} {{ time }} {%- endraw %} </i>
     		</span>
+
     	</div>
     	
     </script>
@@ -30,9 +33,11 @@
     			{{ message }}
     		 {%- endraw %}
     		</span>
+    		<img src="{% raw -%} {{source}} {%- endraw %}", height="60", width="60">
     		<span id="timestamp">
     			<i>{% raw -%} {{ time }} {%- endraw %} </i>
     		</span>
+    		
     	</div>
     	
     </script>    
@@ -48,6 +53,8 @@
 		</div>
 		<input type="text" name="newchannel"><br><span class="validation"></span><br>
 		<button id="channel-btn">Create your own Channel</button>
+		<div class="user-list">
+		</div>
 		<div class="logout-btn">
 			<a id="logout" href="{{ url_for('logout')}}">Logout</a>
 		</div>
@@ -62,7 +69,7 @@
 	
 	<div class="message-box">
 	
-		<input type="text" name="message"><button id="sendmessage">Send</button>
+		<input type="text" name="message"><input type="file" id="attachment"><button id="sendmessage">Send</button>
 		
 	</div>
 

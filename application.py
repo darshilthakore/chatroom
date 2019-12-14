@@ -210,7 +210,7 @@ def updatemessage(data):
 	print(f"name of user: {name} ")
 	
 	# channels[channel][name] = [data["msg"], data["time"]]
-	channels[channel].append([data["name"], data["msg"], data["time"]])
+	channels[channel].append([data["name"], data["msg"], data["time"], data["source"]])
 	print(f" this is the update channel info : {channels}")
 	m = channels[channel][-1]
 	# other_users = []
