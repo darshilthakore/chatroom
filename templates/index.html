@@ -4,32 +4,23 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
 	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">		
 		<script src="{{ url_for('static', filename='index.js')}}"></script>
-		<title>Flack::Connect with people of your interests.</title>
+		<title>Flack::Home Page</title>
+		<style>
+			h2 {
+				background-color: skyblue;
+			}
+		</style>
 	</head>
 	<body>
-		<h2>Flack : Connect with people of your Interests.</h2>
+		<h2>Flack :: Connect with people with similar interests.</h2>
 		<div class="container">
 			<div class="row">
-				<div class="col-sm-6">
-					<h3>Sign in with your username!</h3>
-					<form>
-						<div class="form-group">
-							<input class="form-control" name="username" placeholder="Enter your displayname" required>
-						</div>
-						<div class="form-group">
-							<input class="form-control" type="password" name="password" placeholder="Enter your password" required>
-						</div>
-						<div class="form-group">
-							<button class="btn btn-primary">LogIN</button>
-						</div>
-					</form>
-				</div>
-				<div class="col-sm-6">
-					<h3>Or Else use your new display name</h3>
+				<div class="col-sm-12">
+					<h3>Enter a displayname, which will be visible to other users.</h3>
 					<form action="{{ url_for('newuser') }}" method="post">
 						<div class="form-group">
 							<input class="form-control" name="displayname" placeholder="Enter a username which will be visible to others" required><span class="validation"></span>
-							<input class="form-control" type="password" name="password-login" placeholder="Enter a new password" required>
+							
 						</div>
 						<div class="form-group">
 							<button class="btn btn-primary" id="newbtn">Enter</button>

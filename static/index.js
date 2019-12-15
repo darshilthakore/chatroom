@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			document.querySelector('#newbtn').disabled = true;
 		}
 
+
+		//ajax request to check displayname availability
 		const request = new XMLHttpRequest();
 		request.open('POST', '/checkdispname');
 		request.onload = () => {
@@ -26,8 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			}
 
 
-			// document.querySelector('.validation').innerHTML= response;
-			// document.querySelector('[name="newbtn"]').disabled = response.status;
+		
 
 
 		};
@@ -40,18 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		request.send(data);
 
 	};
-	// function run(contents) {
-	// 	document.querySelector('.validation').innerHTML = contents;
-	// };
-
-
-	
-	// function checkdispname() {
-	// 	const displayname = document.querySelector('[name="displayname"]').value;
-		
-	// };
-
-
 
 
 });

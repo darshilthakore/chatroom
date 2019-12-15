@@ -16,18 +16,16 @@ socketio = SocketIO(app)
 
 
 users = {'darshil':123}
-# channels = ['#movies', '#sports', '#tvseries', '#hollywood', '#bollywood']
-# channel_sports = 
-# channel_movies = 
-# channels = {"sports": {"darshil": [["hey", "12:15"]]}, "movies": {"rohan": [["hola", "7:13"]]}}
 
-channels = {"sports": [["darshil","hey","12:15"]], "movies": [["rohan","hola","7:13"]] }
+
+channels = {"sports": [["darshil","hey","12:15:30 PM"]], "movies": [["rohan","hola","7:13:12 PM"]] }
 
 
 
-
+#the path which open when user enters the site
 @app.route("/")
 def index():
+	#if a previous user hasn't logged out
 	try:
 		if session['displayname']:
 			print('redirecting to a previous session')
@@ -36,6 +34,7 @@ def index():
 				m.append(user)
 			print(f"users are {m}")
 			return redirect(url_for('mainpage', displayname=session['displayname']))
+	# a new user logging in
 	except KeyError:
 		print("new session")
 		return render_template("index.html")
@@ -47,12 +46,7 @@ def checkdispname():
 	displayname = request.form.get("displayname")
 	if displayname == "":
 		return jsonify({"available": False, "msg": "username cannot be empty"})
-	# getting the displayname from the form
-	# if displayname in users:
-	# 	prompt = "displayname not available"
-	# 	return jsonify(prompt)
-	# prompt = "username available"
-	# return jsonify(prompt)
+
 	try:
 		if users[displayname]:
 			return jsonify({"available": False, "msg": "this username is not available"})
@@ -60,7 +54,7 @@ def checkdispname():
 	except KeyError:
 		return jsonify({"available": True, "msg": "username available"})
 
-
+# checking the channel name availability
 @app.route("/checkchannelname", methods=["POST","GET"])
 def checkchannelname():
 	entered_channel = request.form.get("entered_channel")
@@ -74,10 +68,11 @@ def checkchannelname():
 		return jsonify({"available": True, "msg": "valid channel name"})
 
 
+#verifiying the user and adding the user to the session
 @app.route("/newuser", methods=["POST","GET"])
 def newuser():
 	displayname = request.form.get("displayname")
-	password = request.form.get("password-login")
+	password = request.form.get("password-login") or " "
 	users[displayname] = password
 	m = []
 	for user in users:
@@ -95,6 +90,8 @@ def mainpage():
 def make_session_permanent():
 	session.permanent = True
 
+
+#logging out the user
 @app.route("/logout")
 def logout():
 	try:
@@ -106,6 +103,8 @@ def logout():
 		return redirect(url_for('index'))
 
 
+
+#uploading the image to the specified folder
 @app.route("/upload", methods=["POST", "GET"])
 def upload():
 	if request.method == 'POST':
@@ -116,46 +115,26 @@ def upload():
 		file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 		return jsonify({"filename": filename})
 
-# @app.route("/channels")
-# def channels():
-# 	return render_template("channels.html")
 
-
-# @app.route("/channellists", methods=["POST","GET"])
-# def channellists():
-
-# 	return jsonify(channels)
-
-# @app.route("/newchannel", methods=["POST","GET"])
-# def newchannel():
-# 	channel = request.form.get("channel")
-# 	channel = '#' + str(channel)
-# 	channels.append(channel)
-# 	return channels[-1]
-
-# @app.route("/updatechannel", methods=["POST","GET"])
-# def updatechannel():
-# 	m = channels[-1]
-# 	return jsonify(m)
 
 active_user = {}
 
+
+
+#on joining a new channel
 @socketio.on('join')
 def on_join(data):
     username = session['displayname']
     room = data['room']
-    # for activechannel in active_user[username]:
-    # 	for channel in activechannel:
-    # 		if channel ==  room and activechannel[channel] == False:
-    # 			activechannel[channel] = True
-    # 		else:
-    # 			activechannel[channel] = False
+
     join_room(room)
     print(f"{username} joined {room}")
     #print(f"active user info is : {active_user}")
     m = str(username) + "joined the chat"
     emit('chat join response', m, room=room)
 
+
+#on leaving a channel
 @socketio.on('leave')
 def on_leave(data):
     username = session['displayname']
@@ -166,12 +145,15 @@ def on_leave(data):
     emit('chat join response', m, room=room)
 
 
+
+#updating the channel list on side bar after adding a new channel
 @socketio.on("load channels")
 def loadchannels():
 	data = []
 	for channel in channels:
 		data.append(channel)
 
+#on connecting to the socket
 @socketio.on('connect')
 def connect():
 	print("socket connected")
@@ -180,14 +162,11 @@ def connect():
 	for channel in channels:
 		data.append(channel)
 	print(f"these are the channels {data}")
-	# active_user[user] = []
-	# for channel in channels:
-	# 	active_user[user].append({channel:False})
-
-	# print(f"active user info is : {active_user}")
 
 	emit('response', data, broadcast=False)
 
+
+#on adding a new channel
 @socketio.on('addchannel')
 def addchannel(data):
 	user = session['displayname']
@@ -199,11 +178,11 @@ def addchannel(data):
 		m.append(channel)
 	print(f"updated data structure: {channels}")
 	print(f"update list of channels:  {m}")
-	# active_user[user].append({newchannel:False})
-	# print(f"active user info is : {active_user}")
+
 	emit('response', m, broadcast=True)
 
 
+#loading messages of the channel which is clicked
 @socketio.on('loadmessage')
 def loadmessage(data):
 	print(f"loading the existing messages of {data}")
@@ -215,6 +194,8 @@ def loadmessage(data):
 	print(f"messages are:  {m}")
 	emit('message loader', m, broadcast=False, room=channel)
 
+
+#updating the message entered by the user
 @socketio.on('updatemessage')
 def updatemessage(data):
 	print("initialised")
@@ -222,32 +203,11 @@ def updatemessage(data):
 	print(f"channel to which message is being add to {channel}")
 	name = data["name"]
 	print(f"name of user: {name} ")
-	# print("saving file")
-	# file = data["source"]
-	# filename = secure_filename(file.filename)
-	# print(f"filename is {filename}")
-	# file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-	# print("file saved")
-	
-	# channels[channel][name] = [data["msg"], data["time"]]
+
 	channels[channel].append([data["name"], data["msg"], data["time"], data["filename"]])
 	print(f" this is the update channel info : {channels}")
 	m = channels[channel][-1]
-	# other_users = []
-	# for user in active_user:
-	# 	if user != name:
-	# 		other_users.append(user)
-	# for other_user in other_users:
-	# 	for channel_name in active_user[other_user]:
-	# 		try:
-	# 			if channel_name[channel] == False:
-	# 				print(f"messages of this channel are :  {m}")
-	# 				emit('message loader', m, broadcast=False)
-	# 			else:
-	# 				print(f"messages of this channel are :  {m} and we are broadcating it to {other_user}")
-	# 				emit('message loader', m, broadcast=True)
-	# 		except KeyError:
-	# 			print("not the channel we're looking for")
+
 	print(f"messages of this channel are: {m}")
 	emit('new message', m, broadcast=True, room=channel)
 				

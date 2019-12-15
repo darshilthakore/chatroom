@@ -1,15 +1,6 @@
     	document.addEventListener('DOMContentLoaded', () => {
 	   		var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
-
-	   		//on window closed without logging out, save the channel info on localstorage
-	   		// window.addEventListener("unload", () => {
-	   		// 	const saveinfo = sessionStorage.getItem('channel');
-	   		// 	localStorage.setItem('saveinfo', saveinfo);
-	   		// 	console.log('saving the channel info');
-
-	   		// });
-
 	   		if (localStorage.getItem('retrieve_channel')) {
 	   			console.log(localStorage.getItem('retrieve_channel'));
 	   			const load_closed_channel = localStorage.getItem('retrieve_channel');
@@ -20,23 +11,21 @@
 				document.querySelector('#sendmessage').disabled = false;
 				document.querySelector('[name="message"]').disabled = false;
 				console.log('retrieving the channel info');
-				//console.log('deleting the local storage for retrieving the channel');
-				//localStorage.removeItem('retrieve_channel');
+			
 
 	   		}
 
 
 	   		socket.on('connect', () => {
-	   			//const channel = "general";
-	   			//socket.emit('join', {'room': channel});
-	   			//sessionStorage.setItem('channel', channel);
-	   			//on creating a new channel
+	   	
 	   			if (!sessionStorage.getItem('channel')){
 	   				document.querySelector('#sendmessage').disabled = true;
 	   				document.querySelector('[name="message"]').disabled = true;
 	   			}
 	   			
 	   			document.querySelector('#channel-btn').disabled = true;
+
+	   			// entering the channel name and checking availability with AJAX
 	   			document.querySelector('[name="newchannel"]').onkeyup = () => {
 	   				const newchannel = document.querySelector('[name="newchannel"]').value;
 	   				if (newchannel.length > 0) {
@@ -56,9 +45,6 @@
 							document.querySelector('#channel-btn').disabled = true;
 						}
 
-
-						// document.querySelector('.validation').innerHTML= response;
-						// document.querySelector('[name="newbtn"]').disabled = response.status;
 
 
 					};
@@ -100,12 +86,7 @@
 					const request = new XMLHttpRequest();
 		    		const image = document.querySelector('#attachment').files[0];
 		    		request.open('POST', '/upload');
-		    		//const source = window.URL.createObjectURL(image);
-		    		// if (msg.length > 0) {
-		    		// 	document.getElementById("myFile").disabled = true;
-		    		// } else {
-		    		// 	document.getElementById("myFile").disabled = false;
-		    		// }
+
 		    		request.onload = () => {
 		    			const data = JSON.parse(request.responseText);
 		    			const filename = `${data.filename}`
