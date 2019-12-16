@@ -59,104 +59,114 @@ Now when a user has selected a channel, he can send his own message in this chan
 
 
 
-Here is a short summary for `application.py` fuctions and events and their return and emit response:
+###Here is a short summary for `application.py` fuctions and events and their return and emit response:###
 
-#the path which open when user enters the site
+#### the path which open when user enters the site ####
 @app.route("/")
 def index():
-#returns the index page, or the chat page if a session exists
+returns the index page, or the chat page if a session exists
 
 
-# route to check displayname availability
+#### route to check displayname availability ####
 @app.route("/checkdispname", methods=["POST","GET"])
 def checkdispname():
-#returns availability response
 
-# checking the channel name availability
+returns availability response
+
+#### checking the channel name availability ####
 @app.route("/checkchannelname", methods=["POST","GET"])
 def checkchannelname():
-#returns availability response
+
+returns availability response
 
 
 
-#verifiying the user and adding the user to the session
+#### verifiying the user and adding the user to the session ####
 @app.route("/newuser", methods=["POST","GET"])
 def newuser():
 
 
 
-#logging out the user
+#### logging out the user ####
 @app.route("/logout")
 def logout():
 
 
-#uploading the image to the specified folder
+#### uploading the image to the specified folder ####
 @app.route("/upload", methods=["POST", "GET"])
 def upload():
-#return filename as AJAX response
+
+return filename as AJAX response
 
 
-#on joining a new channel
+#### on joining a new channel ####
 @socketio.on('join')
 def on_join(data):
-#performs join_room() for a session
 
-#on leaving a channel
+performs join_room() for a session
+
+#### on leaving a channel ####
 @socketio.on('leave')
 def on_leave(data)
-#performs leave_room() for a session
 
 
-#on connecting to the socket
+performs leave_room() for a session
+
+
+#### on connecting to the socket ####
 @socketio.on('connect')
 def connect():
-#sends the current channels to the event `response` in chat.js
+
+sends the current channels to the event `response` in chat.js
 
 
-#on adding a new channel
+#### on adding a new channel ####
 @socketio.on('addchannel')
 def addchannel(data):
-#updates current channel list and sends the new channels to event `response` in chat.js
+
+updates current channel list and sends the new channels to event `response` in chat.js
 
 
-#loading messages of the channel which is clicked
+#### loading messages of the channel which is clicked ####
 @socketio.on('loadmessage')
 def loadmessage(data):
-#fetches the messages of the channel which is clicked and sends it to the event `message loader` in chat.js
+
+fetches the messages of the channel which is clicked and sends it to the event `message loader` in chat.js
 
 
-#updating the message entered by the user
+#### updating the message entered by the user ####
 @socketio.on('updatemessage')
 def updatemessage(data):
-#adds the entered message and updates it on the server,then fetches the latest message of the channel which is clicked and sends it to the event `new message` in chat.js
+
+adds the entered message and updates it on the server,then fetches the latest message of the channel which is clicked and sends it to the event `new message` in chat.js
 
 
 
 
-Here is a short summary for `chat.js` functions and events and their emit response:
+##Here is a short summary for `chat.js` functions and events and their emit response: ##
 
 
 
-#check if the tab was closed without logging out, and retrieve the channel and its messages
+#### check if the tab was closed without logging out, and retrieve the channel and its messages ####
 if (localStorage.getItem('retrieve_channel'))
 socket.emit('join', {'room': load_closed_channel});
 socket.emit('loadmessage', {'channel': load_closed_channel});
 
 
 socket.on('connect', ()
-# entering the channel name and checking availability with AJAX
+ entering the channel name and checking availability with AJAX
 
 
-#on creating a channel
+#### on creating a channel ####
 socket.emit('addchannel', {'newchannel': newchannel});
 
 
-#on sending a message
+#### on sending a message ####
 socket.emit('updatemessage', {'channel':channel, 'name':name, 'msg':msg, 'time':time, 'filename':filename});
 
 
 
-#on clicking an existing channel
+#### on clicking an existing channel ####
 socket.emit('leave', {'room': channel});
 sessionStorage.setItem('channel', new_channel);
 localStorage.setItem('retrieve_channel', new_channel);
@@ -164,32 +174,32 @@ socket.emit('join', {'room': new_channel});
 socket.emit('loadmessage', {'channel': new_channel});
 
 
-#updates the existing channel lists
+#### updates the existing channel lists ####
 socket.on('response'
 
-#loads the messages in chat area
+#### loads the messages in chat area ####
 socket.on('message loader'
 message(user,msg,time,filename);
 
 socket.on('new message', data
 entered_message(user,msg,time,filename);
 
-#template for channels
+#### template for channels ####
 function channel(channel)
 
 
-#function to get current timestamp
+#### function to get current timestamp ####
 function timeStamp() 
 
 
-#template for messages
+#### template for messages ####
 function message(displayname,message,time,filename)
 
-#template for entered messages
+#### template for entered messages ####
 function entered_message(displayname,message,time,fi
 lename)
 
-#logging out
+#### logging out ####
 document.querySelector('#logout').onclick = () => {
 	    		localStorage.clear();
 	    		sessionStorage.clear();
