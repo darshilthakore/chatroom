@@ -1,6 +1,8 @@
     	document.addEventListener('DOMContentLoaded', () => {
 	   		var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
+
+	   		//check if the tab was closed without logging out, and retrieve the channel and its messages
 	   		if (localStorage.getItem('retrieve_channel')) {
 	   			console.log(localStorage.getItem('retrieve_channel'));
 	   			const load_closed_channel = localStorage.getItem('retrieve_channel');
