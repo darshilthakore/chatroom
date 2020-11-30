@@ -158,10 +158,10 @@
 	   			document.querySelector('#chatarea').innerHTML = "";
 	   			for (i = 0; i < data.length; i++) {
 	   				msg_details = data[i];
-	   				const user = msg_details[0];
-	   				const msg = msg_details[1];
-	   				const time = msg_details[2];
-	   				const filename = msg_details[3];
+	   				const user = msg_details['user'];
+	   				const msg = msg_details['message'];
+	   				const time = msg_details['msg_time'];
+	   				const filename = msg_details['filename'];
 	   				message(user,msg,time,filename);
 	   				window.scrollBy(0, document.body.offsetHeight);
 	   			}
