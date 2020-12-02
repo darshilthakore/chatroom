@@ -57,36 +57,56 @@ def checkdispname():
 	if displayname == "":
 		return jsonify({"available": False, "msg": "username cannot be empty"})
 
-	try:
-		users = db.execute("SELECT username FROM users").fetchall()
-		print(f"users from db are {users}")
-		for user in users:
 
-			if user[0] == displayname:
-				return jsonify({"available": False, "msg": "this username is not available"})
-			else:
-				return jsonify({"available": True, "msg": "username available"}) 
+	users = db.execute("SELECT username FROM users").fetchall()
+	print(f"users from db are {users}")
+	flag = False
+	for user in users:
+		print(f'User is {user} - {user[0]}')
+		if user[0] == displayname:
+			# return jsonify({"available": False, "msg": "this username is not available"})
+			flag = False
+			break
+		else:
+			# return jsonify({"available": True, "msg": "username available"}) 
+			flag = True
+			continue
+	if flag == False:
+		return jsonify({"available": False, "msg": "this username is not available"})
+	else:
+		return jsonify({"available": True, "msg": "username available"}) 
 
-	except KeyError:
-		return jsonify({"available": True, "msg": "username available"})
+	# except KeyError:
+	# 	return jsonify({"available": True, "msg": "username available"})
 
 # checking the channel name availability
 @app.route("/checkchannelname", methods=["POST","GET"])
 def checkchannelname():
 	entered_channel = request.form.get("entered_channel")
-	try:
-		channels = db.execute("SELECT name FROM channels").fetchall()
-		print(f"channels from db are {channels}")
-		for channel in channels:
-			if channel[0] == entered_channel:
-				return jsonify({"available": False, "msg": "channel with same name exists"})
-			if channel[0] == []:
-				return jsonify({"available": False, "msg": "channel with same name exists"})
-			else:
-				return jsonify({"available": True, "msg": "valid channel name"})				
 
-	except KeyError:
-		return jsonify({"available": True, "msg": "valid channel name"})
+	channels = db.execute("SELECT name FROM channels").fetchall()
+	print(f"channels from db are {channels}")
+	flag = False
+	for channel in channels:
+		print(f'Channel is {channel} - {channel[0]}')
+
+		if channel[0] == entered_channel:
+			# return jsonify({"available": False, "msg": "this username is not available"})
+			flag = False
+			break
+		if channel[0] == []:
+			flag = False
+			break
+		else:
+			# return jsonify({"available": True, "msg": "username available"}) 
+			flag = True
+			continue
+	if flag == False:
+		return jsonify({"available": False, "msg": "channel with same name exists"})
+	else:
+		return jsonify({"available": True, "msg": "valid channel name"}) 
+	# except KeyError:
+	# 	return jsonify({"available": True, "msg": "valid channel name"})
 
 
 #verifiying the user and adding the user to the session
